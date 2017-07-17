@@ -20,7 +20,20 @@ export default class Scan extends Component {
   }
 
   scanNFC() {
-    this.setState({data: {name: "Scanning"}})
+    this.setState({data: {name: "Scanning"}});
+    console.log('Starting up scan listener');
+    NFC.addListener((payload) => {
+      console.log('Captured nfc scan w/ payload', payload);
+      switch(payload.type) {
+        case NfcDataType.NDEF:
+          ToastAndroid.show(`NFC Tag Detected`, ToastAndroid.SHORT);
+          break;
+        case NfcDataType.TAG:
+          ToastAndroid.show('Invalid Tag Type Detected (NON-NDEF)', ToastAndroid.SHORT);
+          break;
+      }
+    });
+    /*
     NFC.addListener(payload => {
       console.log(payload)
       ToastAndroid.show(payload.type)
@@ -54,6 +67,7 @@ export default class Scan extends Component {
                 break;
         }
     });
+    */
   }
 
   render() {
